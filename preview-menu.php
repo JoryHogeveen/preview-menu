@@ -97,6 +97,9 @@ class Preview_Menu
 	 * @since  0.1
 	 */
 	public function action_plugins_loaded() {
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
 
 		$this->capability = apply_filters( 'preview_menu_capability', $this->capability );
 
@@ -147,6 +150,7 @@ class Preview_Menu
 	 */
 	public function filter_wp_nav_menu_args( $args ) {
 
+		// @todo Improve default location.
 		$location = apply_filters( 'preview_menu_default_location', 'primary', $args );
 
 		if ( ! empty( $_GET['preview_menu_location'] ) ) {
