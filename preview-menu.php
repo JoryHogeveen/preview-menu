@@ -123,7 +123,7 @@ class Preview_Menu
 		// Store menu location before Polylang modifications.
 		$this->menu_locations = get_registered_nav_menus();
 
-		if ( apply_filters( 'preview_menu_meta_box', true ) ) {
+		if ( apply_filters( 'preview_menu_enable_meta_box', true ) ) {
 			$this->add_meta_box();
 		}
 	}

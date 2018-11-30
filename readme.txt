@@ -18,7 +18,7 @@ This plugin lets you preview your menu on any registered location.
 = Filters =
 *   [`preview_menu_capability`](https://github.com/JoryHogeveen/preview-menu/wiki#filter-preview_menu_capability)
 *   [`preview_menu_default_location`](https://github.com/JoryHogeveen/preview-menu/wiki#filter-preview_menu_default_location)
-*   [`preview_menu_meta_box`](https://github.com/JoryHogeveen/preview-menu/wiki#filter-preview_menu_meta_box)
+*   [`preview_menu_enable_meta_box`](https://github.com/JoryHogeveen/preview-menu/wiki#filter-preview_menu_enable_meta_box)
 
 You can use these filters inside your theme functions.php file or in a plugin.
 
