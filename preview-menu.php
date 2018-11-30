@@ -3,7 +3,7 @@
  * @author  Jory Hogeveen <info@keraweb.nl>
  * @package Preview_Menu
  * @since   0.1
- * @version 0.1
+ * @version 0.1.1
  * @licence GPL-2.0+
  * @link    https://github.com/JoryHogeveen/preview-menu/
  *
@@ -11,7 +11,7 @@
  * Plugin Name:       Preview Menu
  * Plugin URI:        https://github.com/JoryHogeveen/preview-menu
  * Description:       Preview menu's on selected locations.
- * Version:           0.1
+ * Version:           0.1.1
  * Author:            Jory Hogeveen
  * Author URI:        https://www.keraweb.nl
  * Text Domain:       preview-menu
@@ -54,6 +54,13 @@ class Preview_Menu
 	private $menu_locations = array();
 
 	/**
+	 * The capability required to access this plugin.
+	 * @var    string
+	 * @since  0.1.1
+	 */
+	private $capability = '';
+
+	/**
 	 * The single instance of the class.
 	 *
 	 * @var    \Preview_Menu
@@ -91,9 +98,16 @@ class Preview_Menu
 	 */
 	public function action_plugins_loaded() {
 
+		$this->capability = apply_filters( 'preview_menu_capability', $this->capability );
+
 		if ( ! is_admin() ) {
 			$this->front();
 		}
+
+		if ( ! current_user_can( $this->capability ) ) {
+			return;
+		}
+
 		add_action( 'admin_init', array( $this, 'admin_init' ), 1 ); // Before Polylang.
 	}
 
@@ -102,6 +116,7 @@ class Preview_Menu
 	 * @since  0.1
 	 */
 	public function admin_init() {
+
 		// Store menu location before Polylang modifications.
 		$this->menu_locations = get_registered_nav_menus();
 
@@ -119,7 +134,7 @@ class Preview_Menu
 		/**
 		 * Option to switch to another menu preview for users who can manage menu's.
 		 */
-		if ( ! empty( $_GET['preview_menu'] ) && current_user_can( 'edit_theme_options' ) ) {
+		if ( ! empty( $_GET['preview_menu'] ) && current_user_can( $this->capability ) ) {
 			add_filter( 'wp_nav_menu_args', array( $this, 'filter_wp_nav_menu_args' ), 1 );
 		}
 	}
