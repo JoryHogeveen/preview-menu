@@ -103,15 +103,32 @@ class Preview_Menu
 
 		$this->capability = apply_filters( 'preview_menu_capability', $this->capability );
 
-		if ( ! is_admin() ) {
-			$this->front();
-		}
-
 		if ( ! current_user_can( $this->capability ) ) {
 			return;
 		}
 
-		add_action( 'admin_init', array( $this, 'admin_init' ), 1 ); // Before Polylang.
+		add_action( 'wp_loaded', array( $this, 'wp_loaded' ), 1 ); // Before Polylang.
+
+		if ( ! is_admin() ) {
+			$this->front();
+		} else {
+			add_action( 'admin_init', array( $this, 'admin_init' ), 1 );
+		}
+	}
+
+	/**
+	 * Store data after WP is loaded.
+	 * @since  0.2
+	 */
+	public function wp_loaded() {
+
+		// Store menu location before Polylang modifications.
+		$this->menu_locations = get_registered_nav_menus();
+
+		foreach ( $this->menu_locations as $location => $info ) {
+			$this->default_location = $location;
+			break;
+		}
 	}
 
 	/**
@@ -119,9 +136,6 @@ class Preview_Menu
 	 * @since  0.1
 	 */
 	public function admin_init() {
-
-		// Store menu location before Polylang modifications.
-		$this->menu_locations = get_registered_nav_menus();
 
 		if ( apply_filters( 'preview_menu_enable_meta_box', true ) ) {
 			$this->add_meta_box();
