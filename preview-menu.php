@@ -464,6 +464,7 @@ class Preview_Menu
 		<input type="url" name="preview_menu_url" id="preview_menu_url" class="widefat" value="<?php echo $url; ?>">
 		<label for="preview_menu_location"><?php esc_html_e( 'Select location', 'preview-menu' ) ?></label>
 		<select name="preview_menu_location" id="preview_menu_location" class="widefat">
+			<option value="0">- <?php esc_html_e( 'Current menu location(s)', 'preview-menu' ) ?> -</option>
 			<?php
 			foreach ( $this->menu_locations as $location => $name ) {
 				?>
