@@ -58,7 +58,14 @@ class Preview_Menu
 	 * @var    string
 	 * @since  0.2
 	 */
-	private $default_location = 'primary';
+	private $default_location = '';
+
+	/**
+	 * The current menu location.
+	 * @var    string
+	 * @since  0.2
+	 */
+	private $current_location = '';
 
 	/**
 	 * The capability required to access this plugin.
@@ -188,9 +195,10 @@ class Preview_Menu
 			if ( is_numeric( $this->preview_menu ) && 1 === (int) $this->preview_menu ) {
 				$this->preview_menu = get_option( $this->option );
 				add_filter( 'wp_get_nav_menu_items', array( $this, 'filter_front_wp_get_nav_menu_items' ), 1, 3 );
-			} else {
-				add_filter( 'wp_nav_menu_args', array( $this, 'filter_front_wp_nav_menu_args' ), 1 );
 			}
+			add_filter( 'wp_nav_menu_args', array( $this, 'filter_front_wp_nav_menu_args' ), 1 );
+
+			$this->default_location = apply_filters( 'preview_menu_default_location', $this->default_location );
 		}
 	}
 
@@ -202,13 +210,15 @@ class Preview_Menu
 	 */
 	public function filter_front_wp_nav_menu_args( $args ) {
 
-		$location = apply_filters( 'preview_menu_default_location', $this->default_location, $args );
+		$location = $this->default_location;
 
-		if ( ! empty( $_GET['preview_menu_location'] ) ) {
+		if ( isset( $_GET['preview_menu_location'] ) ) {
 			$location = $_GET['preview_menu_location'];
 		}
 
-		if ( $location !== $args['theme_location'] ) {
+		$this->current_location = $args['theme_location'];
+
+		if ( $location !== $this->current_location || ! is_scalar( $this->preview_menu ) ) {
 			return $args;
 		}
 
@@ -226,16 +236,17 @@ class Preview_Menu
 	 * @return object[] mixed
 	 */
 	public function filter_front_wp_get_nav_menu_items( $items, $menu, $args ) {
-		$args = wp_parse_args( $args, array( 'theme_location' => '' ) );
 
-		$location = apply_filters( 'preview_menu_default_location', '', $args );
+		$location               = $this->default_location;
+		$current_location       = $this->current_location;
+		$this->current_location = ''; // Reset.
 
-		if ( ! empty( $_GET['preview_menu_location'] ) ) {
+		if ( isset( $_GET['preview_menu_location'] ) ) {
 			$location = $_GET['preview_menu_location'];
 		}
 
 		// Replace menu based on location.
-		if ( $location && $location === $args['theme_location'] ) {
+		if ( $location && $location === $current_location ) {
 			return $this->get_preview_menu_items( $args );
 		}
 		// No location given, replace the menu on it's current location.
@@ -289,7 +300,7 @@ class Preview_Menu
 			$items = $this->preview_menu['items'];
 		}
 
-		// @see wp_get_nav_menu_items.
+		// @see wp_get_nav_menu_items().
 		if ( ARRAY_A === $args['output'] ) {
 			$items = wp_list_sort( $items, array(
 				$args['output_key'] => 'ASC',
