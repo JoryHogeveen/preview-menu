@@ -68,25 +68,33 @@
 		key   = encodeURI( key );
 		value = encodeURI( value );
 
-		url = url.split( '&' );//url.substr(1).split('&');
+		url = url.split( '?' );
+		if ( 1 === url.length ) {
+			url[1] = '';
+		}
 
-		var i = url.length;
+		var param = url[1].split( '&' );//url.substr(1).split('&');
+		var i     = param.length;
 		var x;
 		while ( i-- ) {
-			x = url[ i ].split( '=' );
+			x = param[ i ].split( '=' );
 
 			if ( x[0] === key ) {
-				x[1]     = value;
-				url[ i ] = x.join( '=' );
+				x[1]       = value;
+				param[ i ] = x.join( '=' );
 				break;
 			}
 		}
 
 		if ( i < 0 ) {
-			url[ url.length ] = [ key, value ].join( '=' );
+			param[ param.length ] = [ key, value ].join( '=' );
 		}
 
-		return url.join( '&' );
+		param = param.filter( Boolean );
+
+		url[1] = param.join( '&' );
+
+		return url.join( '?' );
 	};
 
 	if ( 'undefined' !== typeof PreviewMenu ) {
