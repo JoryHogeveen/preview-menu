@@ -187,7 +187,7 @@ class Preview_Menu
 	 */
 	public function add_meta_box() {
 		add_meta_box(
-			'preview-menu-meta-box',
+			'preview-menu',
 			esc_html__( 'Preview Menu', 'preview-menu' ),
 			array( $this, 'meta_box' ),
 			'nav-menus',
