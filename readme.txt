@@ -2,10 +2,10 @@
 Contributors: keraweb
 Donate link: https://www.keraweb.nl/donate.php?for=preview-menu
 Tags: preview menu, preview, menu
-Requires at least: 3.0
+Requires at least: 4.1
 Tested up to: 5.0
 Requires PHP: 5.2.4
-Stable tag: 0.1.1
+Stable tag: 0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,9 @@ Or search for "Preview Menu" via your plugins menu.
 1. Menu meta box
 
 == Changelog ==
+
+= 0.2 =
+*	**Feature:** Store menu modifications (draft) for preview.
 
 = 0.1.1 =
 *	**Enhancement:** Better capability verification.
